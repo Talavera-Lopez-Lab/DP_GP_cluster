@@ -299,10 +299,10 @@ class dp_cluster():
                 else:
                     self.Y = np.array(np.mat(gene_expression_matrix[self.members,:])).T
                 
-#                 print self.X
-#                 print "shape(self.X)", self.X.shape
-#                 print self.Y
-#                 print "shape(self.Y)", self.Y.shape
+#                 print(self.X)
+#                 print("shape(self.X)", self.X.shape)
+#                 print(self.Y)
+#                 print("shape(self.Y)", self.Y.shape)
                 
 #                 self.K = self.kernel.K(self.X)
                 if not sparse_regression or self.size <= 20:
@@ -406,9 +406,9 @@ cdef class gibbs_sampler(object):
     cdef int iter_num, num_samples_taken, min_sq_dist_counter, post_counter, m, s, burnIn_phaseI, burnIn_phaseII ,max_num_iterations, max_iters, n_genes
     cdef double min_sq_dist, prev_sq_dist, current_sq_dist, max_post, current_post, prev_post, alpha,  sigma_n_init, sigma_n2_shape, sigma_n2_rate, length_scale_mu, length_scale_sigma, sigma_f_mu, sigma_f_sigma, sq_dist_eps, post_eps
     cdef bool converged, converged_by_sq_dist, converged_by_likelihood, check_convergence, check_burnin_convergence, sparse_regression, fast
-    cpdef gene_expression_matrix
+    cdef gene_expression_matrix
     cdef double[:] t
-    cpdef optimizer, X, last_MVN_by_cluster_by_gene, last_cluster, clusters, S, log_likelihoods, cluster_size_changes, last_proportions, sampled_clusterings, all_clusterings
+    cdef optimizer, X, last_MVN_by_cluster_by_gene, last_cluster, clusters, S, log_likelihoods, cluster_size_changes, last_proportions, sampled_clusterings, all_clusterings
     
     def __init__(self,
                  gene_expression_matrix,
@@ -617,19 +617,19 @@ cdef class gibbs_sampler(object):
             if clusterID in self.last_MVN_by_cluster_by_gene and gene in self.last_MVN_by_cluster_by_gene[clusterID]:
                 lik[index] = self.last_MVN_by_cluster_by_gene[clusterID][gene]
             else:
-#                 print expression_vector.shape,
+#                 print(expression_vector.shape,)
                 non_nan = ~np.isnan(expression_vector)
-#                 print non_nan,
+#                 print(non_nan,)
                 non_nan_idx = np.arange(len(expression_vector))[non_nan]
-#                 print non_nan_idx,
+#                 print(non_nan_idx,)
 #                 lik[index] = -0.5 * (self.clusters[clusterID].rank * _LOG_2PI + self.clusters[clusterID].log_pdet + \
 #                                      np.sum(np.square(np.dot(expression_vector[non_nan] - \
 #                                                              self.clusters[clusterID].mean[non_nan], 
 #                                                              self.clusters[clusterID].U[non_nan_idx].T[non_nan_idx]))))
-#                 print "self.clusters[clusterID].rank", self.clusters[clusterID].rank
-#                 print "self.clusters[clusterID].U.shape", self.clusters[clusterID].U.shape
-#                 print "expression_vector", expression_vector
-#                 print "self.clusters[clusterID].mean", self.clusters[clusterID].mean
+#                 print("self.clusters[clusterID].rank", self.clusters[clusterID].rank)
+#                 print("self.clusters[clusterID].U.shape", self.clusters[clusterID].U.shape)
+#                 print("expression_vector", expression_vector)
+#                 print("self.clusters[clusterID].mean", self.clusters[clusterID].mean)
                 lik[index] = -0.5 * (self.clusters[clusterID].rank * _LOG_2PI + self.clusters[clusterID].log_pdet + \
                                      np.sum(np.square(np.dot(expression_vector - self.clusters[clusterID].mean, self.clusters[clusterID].U))))
        
@@ -747,7 +747,7 @@ cdef class gibbs_sampler(object):
 #         import warnings
 #         warnings.simplefilter("error")
         
-        print 'Initializing one-gene clusters...'
+        print('Initializing one-gene clusters...')
         cdef int i, gene
         for i in range(self.n_genes):
             self.clusters[self.m + i] = dp_cluster(members=[i], sigma_n=self.sigma_n_init, \
@@ -762,11 +762,11 @@ cdef class gibbs_sampler(object):
             
             # keep user updated on clustering progress:
             if self.iter_num % 10 == 0:
-                print 'Gibbs sampling iteration %s'%(self.iter_num)
+                print('Gibbs sampling iteration %s'%(self.iter_num))
             if self.iter_num == self.burnIn_phaseI:
-                print 'Past burn-in phase I, start optimizing hyperparameters...'
+                print('Past burn-in phase I, start optimizing hyperparameters...')
             if self.iter_num == self.burnIn_phaseII:
-                print 'Past burn-in phase II, start taking samples...'
+                print('Past burn-in phase II, start taking samples...')
             
             # at every iteration create empty clusters to ensure new mean trajectories
             for i in range(0, self.m):
@@ -774,7 +774,7 @@ cdef class gibbs_sampler(object):
                 if i in self.last_MVN_by_cluster_by_gene:
                     del self.last_MVN_by_cluster_by_gene[i]
             
-            print 'Sizes of clusters =', [c.size for c in self.clusters.values()]
+            print('Sizes of clusters =', [c.size for c in self.clusters.values()])
             for i in range(self.n_genes):
                 gene = i
                 
@@ -843,7 +843,7 @@ cdef class gibbs_sampler(object):
                     if ( self.iter_num < self.burnIn_phaseI ) and \
                     ( self.iter_num > self.burnIn_phaseI / 4.):
                         
-                        print "Burn-In phase I converged by cluster-switching ratio"
+                        print("Burn-In phase I converged by cluster-switching ratio")
                         self.burnIn_phaseII = self.burnIn_phaseII - self.burnIn_phaseI + self.iter_num
                         self.burnIn_phaseI = self.iter_num
                         self.cluster_size_changes = []
@@ -851,7 +851,7 @@ cdef class gibbs_sampler(object):
                     elif ( self.iter_num > self.burnIn_phaseI ) and \
                     ( (self.iter_num - self.burnIn_phaseI) > ((self.burnIn_phaseII - self.burnIn_phaseI) / 4.) ):
                         
-                        print "Burn-In phase II converged by cluster-switching ratio"
+                        print("Burn-In phase II converged by cluster-switching ratio")
                         self.burnIn_phaseII = self.iter_num
                         continue
                         
@@ -878,7 +878,7 @@ cdef class gibbs_sampler(object):
                 self.sampled_clusterings = np.vstack((self.sampled_clusterings, np.array([self.last_cluster[i] for i in range(self.n_genes)])))   
                 
                 self.num_samples_taken += 1
-                print 'Sample number: %s'%(self.num_samples_taken)
+                print('Sample number: %s'%(self.num_samples_taken))
                 
                 # save log-likelihood of sampled clustering
                 self.prev_post = self.current_post
@@ -895,7 +895,7 @@ cdef class gibbs_sampler(object):
                         
 #                         with utils.suppress_stdout_stderr():
 #                             for cluster in self.clusters:
-#                                 print dir(cluster)
+#                                 print(dir(cluster))
 #                                 test = copy.deepcopy(cluster)
                             
 #                             min_sq_dist_clusters = copy.deepcopy(self.clusters)
@@ -933,11 +933,11 @@ cdef class gibbs_sampler(object):
                                 
         if self.converged:
             if self.post_counter >= 10:
-                print 'Gibbs sampling converged by log-likelihood'
+                print('Gibbs sampling converged by log-likelihood')
             if self.min_sq_dist_counter >= 10:
-                print 'Gibbs sampling converged by least squares distance of gene-by-gene pairwise cluster membership'
+                print('Gibbs sampling converged by least squares distance of gene-by-gene pairwise cluster membership')
         elif (self.iter_num == self.max_num_iterations):
-            print "Maximum number of Gibbs sampling iterations: %s; terminating Gibbs sampling now."%(self.iter_num)
+            print("Maximum number of Gibbs sampling iterations: %s; terminating Gibbs sampling now."%(self.iter_num))
         
         self.sampled_clusterings = pd.DataFrame(self.sampled_clusterings[1:,:], columns=self.sampled_clusterings[0,:])
         self.all_clusterings = pd.DataFrame(self.all_clusterings[1:,:], columns=self.all_clusterings[0,:])
