@@ -47,8 +47,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'DP_GP_cluster'
-copyright = u'2016, Ian McDowell'
+project = 'DP_GP_cluster'
+copyright = '2016, Ian McDowell'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -200,8 +200,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'DP_GP_cluster.tex', u'DP\\_GP\\_cluster Documentation',
-   u'Ian McDowell', 'manual'),
+  ('index', 'DP_GP_cluster.tex', 'DP\\_GP\\_cluster Documentation',
+   'Ian McDowell', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -230,8 +230,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'dp_gp_cluster', u'DP_GP_cluster Documentation',
-     [u'Ian McDowell'], 1)
+    ('index', 'dp_gp_cluster', 'DP_GP_cluster Documentation',
+     ['Ian McDowell'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -244,8 +244,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'DP_GP_cluster', u'DP_GP_cluster Documentation',
-   u'Ian McDowell', 'DP_GP_cluster', 'One line description of project.',
+  ('index', 'DP_GP_cluster', 'DP_GP_cluster Documentation',
+   'Ian McDowell', 'DP_GP_cluster', 'One line description of project.',
    'Miscellaneous'),
 ]
 
