@@ -1,0 +1,43 @@
+[project]
+name = "DP_GP_cluster"
+version = "0.1"
+description = "Clustering gene expression time course data by an infinite Gaussian process mixture model."
+url = "https://github.com/ReddyLab/DP_GP_cluster"
+authors = ["Ian McDowell <ian.mcdowell@duke.edu>", "Dinesh Manandhar", "Barbara Engelhardt"]
+keywords = ["clustering", "Dirichlet Process", "Gaussian Process", "Bayesian", "gene expression", "time series"]
+license = "BSD License"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["DP_GP"]
+scripts = ["bin/DP_GP_cluster.py"]
+install_requires = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "GPy"
+]
+
+[tool.setuptools.build-system]
+requires = [
+    "setuptools >= 46.1.0",
+    "wheel >= 0.34.2",
+    "Cython >= 0.29.21",
+    "numpy >= 1.20.0"
+]
+
+[tool.setuptools.extension]
+[tool.setuptools.extension.ext_modules]
+name = "DP_GP.core"
+sources = ["DP_GP/core.pyx"]
+include_dirs = ["numpy.get_include()"]
+
+[tool.setuptools.extension.ext_modules]
+name = "DP_GP.cluster_tools"
+sources = ["DP_GP/cluster_tools.pyx"]
+include_dirs = ["numpy.get_include()"]
