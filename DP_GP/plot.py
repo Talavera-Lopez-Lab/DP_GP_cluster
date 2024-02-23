@@ -19,7 +19,7 @@ def adjust_spines(ax, spines):
     see matplotlib examples:
     http://matplotlib.org/examples/pylab_examples/spine_placement_demo.html
     ''' 
-    for loc, spine in ax.spines.items():
+    for loc, spine in list(ax.spines.items()):
         if loc in spines:
             spine.set_position(('outward', 10))  # outward by 10 points
         else:
@@ -70,7 +70,7 @@ def plot_cluster_gene_expression(clusters, gene_expression_matrix, t, t_labels, 
     total_no_of_figs = int(np.ceil(total_subplots/float(subplots_per_fig)))
     total_cols = 2 # generate this many columns of subplots in the figure.
     total_rows = np.ceil(subplots_per_fig/total_cols) # each figure generate will have this many rows.
-    IDs_split = [IDs[i:i+subplots_per_fig] for i in xrange(0, len(IDs), subplots_per_fig)]
+    IDs_split = [IDs[i:i+subplots_per_fig] for i in range(0, len(IDs), subplots_per_fig)]
     index = 1
     for c, IDs in enumerate(IDs_split):
         fig = plt.figure(num=None, figsize=(8,12), dpi=300, facecolor='w', edgecolor='k') #figsize=(12,8),
@@ -99,7 +99,7 @@ def plot_cluster_gene_expression(clusters, gene_expression_matrix, t, t_labels, 
             light_blue_patch = mpatches.Rectangle([0, 0], 1, 1, facecolor='#33CCFF', edgecolor='blue', lw=1, alpha=0.3)
             red_line = mlines.Line2D([], [], color='red', label='individual gene trajectory')
             ax.legend([ax.lines[0], light_blue_patch, red_line], \
-                      ['cluster mean', u'cluster mean \u00B1 2 x std. dev.', 'individual gene trajectory'], 
+                      ['cluster mean', 'cluster mean \u00B1 2 x std. dev.', 'individual gene trajectory'], 
                       loc=4, frameon=False, prop={'size':6})
             # prettify axes
             adjust_spines(ax, ['left', 'bottom'])
@@ -238,7 +238,7 @@ def plot_cluster_sizes_over_iterations(all_clusterings, burnIn_phaseI, burnIn_ph
     for cluster in all_clusterIDs:
         c=next(color)
         mid_line_y = current_height - max_num_genes_per_cluster[cluster] * 0.5
-        half_num_genes_in_clust_over_iters = np.zeros(len(cluster_size_over_iterations.keys()))
+        half_num_genes_in_clust_over_iters = np.zeros(len(list(cluster_size_over_iterations.keys())))
         for iter_num in sorted(cluster_size_over_iterations):
             if cluster in cluster_size_over_iterations[iter_num]:
                 half_num_genes_in_clust_over_iters[iter_num] = cluster_size_over_iterations[iter_num][cluster] * 0.5
