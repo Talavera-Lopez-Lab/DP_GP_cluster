@@ -23,7 +23,7 @@ setup(
       license='BSD License',
       packages=['DP_GP'],
       setup_requires=['numpy', 'Cython'],
-      install_requires=["matplotlib", "numpy", "pandas", "scipy", "scikit-learn", "GPy"]
+      install_requires=["matplotlib", "numpy", "pandas", "scipy", "scikit-learn", "GPy"],
       ext_modules = cythonize(ext_modules), 
       package_dir={'DP_GP':'DP_GP'},
       scripts=['bin/DP_GP_cluster.py'],
