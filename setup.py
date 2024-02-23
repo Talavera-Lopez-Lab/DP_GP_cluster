@@ -22,6 +22,7 @@ setup(
                   'Bayesian', 'gene expression', 'time series'],
       license='BSD License',
       packages=['DP_GP'],
+      setup_requires=['numpy', 'Cython']
       install_requires=['numpy', 'Cython'],
       ext_modules = cythonize(ext_modules), 
       package_dir={'DP_GP':'DP_GP'},
