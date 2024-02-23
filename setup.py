@@ -1,6 +1,9 @@
-from distutils.core import setup 
-from Cython.Distutils import build_ext 
-from distutils.extension import Extension 
+#from distutils.core import setup 
+#from Cython.Distutils import build_ext 
+#from distutils.extension import Extension 
+from setuptools import setup, Extension
+from Cython.Build import cythonize
+
 import numpy
 
 ext_modules = [Extension("DP_GP.core", ["DP_GP/core.pyx"], 
@@ -20,8 +23,7 @@ setup(
       license='BSD License',
       packages=['DP_GP'],
       install_requires=['numpy', 'Cython'],
-      ext_modules = ext_modules, 
-      cmdclass = {'build_ext': build_ext},
+      ext_modules = cythonize(ext_modules), 
       package_dir={'DP_GP':'DP_GP'},
       scripts=['bin/DP_GP_cluster.py'],
       long_description=open('README.md', 'rt').read()
