@@ -85,9 +85,9 @@ def read_gene_expression_matrices(gene_expression_matrices, true_times=False, un
     
     # transform gene expression as desired
     if not do_not_mean_center and unscaled:
-        gene_expression_matrix -= np.vstack(np.nanmean(gene_expression_matrix, axis=1))
+        gene_expression_matrix = gene_expression_matrix - np.vstack(np.nanmean(gene_expression_matrix, axis=1))
     elif not do_not_mean_center and not unscaled:
-        gene_expression_matrix -= np.vstack(np.nanmean(gene_expression_matrix, axis=1))
+        gene_expression_matrix = gene_expression_matrix - np.vstack(np.nanmean(gene_expression_matrix, axis=1))
         gene_expression_matrix /= np.vstack(np.nanstd(gene_expression_matrix, axis=1))
     elif do_not_mean_center and unscaled:
         pass # do nothing
