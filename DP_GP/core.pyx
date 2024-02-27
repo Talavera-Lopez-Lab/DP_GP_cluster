@@ -63,7 +63,7 @@ def read_gene_expression_matrices(gene_expression_matrices, true_times=False, un
         
         na_values = ['', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', 'N/A', 'NA', 'NULL', 'NaN', 'nan']
         gene_expression_df = pd.read_csv(gene_expression_matrix, sep="\t", na_values=na_values, index_col=0)
-        t_labels = list(gene_expression_df.columns)
+        t_labels = gene_expression_df.columns.tolist()
         # stack replicates depth-wise, to ultimately take mean
         if i != 0:
             gene_expression_array = np.dstack((gene_expression_array, np.array(gene_expression_df)))
@@ -76,9 +76,9 @@ def read_gene_expression_matrices(gene_expression_matrices, true_times=False, un
     else:
         gene_expression_matrix = gene_expression_array
         
-    gene_names = list(gene_expression_df.index)
+    gene_names = gene_expression_df.index.tolist()
     if true_times:
-        t = np.array(list(gene_expression_df.columns)).astype('float')
+        t = np.array(gene_expression_df.columns.tolist()).astype('float')
     else:
         # if not true_times, then create equally spaced time points
         t = np.array(range(gene_expression_df.shape[1])).astype('float')
@@ -88,17 +88,21 @@ def read_gene_expression_matrices(gene_expression_matrices, true_times=False, un
         gene_expression_matrix = gene_expression_matrix - np.vstack(np.nanmean(gene_expression_matrix, axis=1))
     elif not do_not_mean_center and not unscaled:
         gene_expression_matrix = gene_expression_matrix - np.vstack(np.nanmean(gene_expression_matrix, axis=1))
-        gene_expression_matrix /= np.vstack(np.nanstd(gene_expression_matrix, axis=1))
+        std_dev = np.nanstd(gene_expression_df, axis=1)
+        valid_std_dev = std_dev != 0
+        gene_expression_matrix[valid_std_dev] = gene_expression_matrix[valid_std_dev] / np.vstack(std_dev[valid_std_dev])
     elif do_not_mean_center and unscaled:
         pass # do nothing
     elif do_not_mean_center and not unscaled:
         mean = np.vstack(np.nanmean(gene_expression_matrix, axis=1))
         # first mean-center before scaling
-        gene_expression_matrix -= mean
+        gene_expression_matrix = gene_expression_matrix - mean
         # scale
-        gene_expression_matrix /= np.vstack(np.nanstd(gene_expression_matrix, axis=1))
+        std_dev = np.nanstd(gene_expression_df, axis=1)
+        valid_std_dev = std_dev != 0
+        gene_expression_matrix[valid_std_dev] = gene_expression_matrix[valid_std_dev] / np.vstack(std_dev[valid_std_dev])
         # add mean once again, to disrupt mean-centering
-        gene_expression_matrix += mean
+        gene_expression_matrix = gene_expression_matrix + mean
     
     return(gene_expression_matrix, gene_names, t, t_labels)
 
