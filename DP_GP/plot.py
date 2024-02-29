@@ -69,7 +69,7 @@ def plot_cluster_gene_expression(clusters, gene_expression_matrix, t, t_labels, 
     subplots_per_fig = 6
     total_no_of_figs = int(np.ceil(total_subplots/float(subplots_per_fig)))
     total_cols = 2 # generate this many columns of subplots in the figure.
-    total_rows = np.ceil(subplots_per_fig/total_cols) # each figure generate will have this many rows.
+    total_rows = int(np.ceil(subplots_per_fig/total_cols)) # each figure generate will have this many rows.
     IDs_split = [IDs[i:i+subplots_per_fig] for i in range(0, len(IDs), subplots_per_fig)]
     index = 1
     for c, IDs in enumerate(IDs_split):
@@ -91,7 +91,7 @@ def plot_cluster_gene_expression(clusters, gene_expression_matrix, t, t_labels, 
             plt.axhline(0, color='black', ls='--', alpha=0.5)
             # plot the expression of each gene in the cluster
             for gene in list(clusters[ID].members):
-                ax.plot(t, np.array(gene_expression_matrix.ix[gene]), color='red', alpha=0.1)
+                ax.plot(t, np.array(gene_expression_matrix.iloc[gene]), color='red', alpha=0.1)
             
             # plot mean expression of cluster
             ax.plot(Xgrid, mu, color='blue')
