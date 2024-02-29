@@ -10,16 +10,31 @@ DP_GP_cluster clusters genes by expression over a time course using a Dirichlet 
 Genes that follow similar expression trajectories in response to stress or stimulus tend to share biological functions.  Thus, it is reasonable and common to cluster genes by expression trajectories.  Two important considerations in this problem are (1) selecting the "correct" or "optimal" number of clusters and (2) modeling the trajectory and time-dependency of gene expression. A [Dirichlet process](http://en.wikipedia.org/wiki/Dirichlet_process) can determine the number of clusters in a nonparametric manner, while a [Gaussian process](http://en.wikipedia.org/wiki/Gaussian_process) can model the trajectory and time-dependency of gene expression in a nonparametric manner.
 
 ## Installation and Dependencies
+1. create and activate conda/mamba environment
+```bash
+mamba create -n DP_GP-env python=3.10
+mamba activate DP_GP-env
+```
+2. Install Cython and numpy
+```bash
+mamba install -c conda-forge Cython numpy
+```
+3. Clone repo
+```bash
+git clone https://github.com/Talavera-Lopez-Lab/DP_GP_cluster.git
+```
+4. Use pip for installation
+```bash
+cd path/to/DP_GP_cluster
+pip install .
+```
 
-DP_GP_cluster requires the following Python packages:
+DP_GP_cluster requires the following automatically installed Python packages:
     
     GPy, pandas, numpy, scipy (>= 0.14), matplotlib.pyplot
 
-It has been tested in linux with Python 2.7 and with Anaconda distributions of the latter four above packages.
+It has been tested in linux with Python 3.10 and with Anaconda distributions of the latter four above packages.
 
-Download source code and uncompress, then:
-
-    python setup.py install
 
 ## Tests
 
