@@ -3,9 +3,6 @@
 #from distutils.extension import Extension 
 from setuptools import setup, Extension
 
-import numpy
-
-
                          
 setup(
       name='DP_GP_cluster',
