@@ -4,11 +4,9 @@ Created on 2016-03-06
 @author: Ian McDowell and ...
 '''
 import cython
-from cpython cimport bool 
 from sys import float_info
 import numpy as np
-cimport numpy as np
-np.import_array()
+import numpy as np
 import pandas as pd
 import collections
 import GPy
@@ -352,7 +350,7 @@ class dp_cluster():
 #
 #############################################################################################
         
-cdef class gibbs_sampler(object):
+class gibbs_sampler(object):
     '''
     Explore the posterior distribution of clusterings by sampling the prior based
     on Neal's Algorithm 8 (2000) and the conditional likelihood of a gene being 
@@ -407,37 +405,37 @@ cdef class gibbs_sampler(object):
     
     '''
     
-    cdef int iter_num, num_samples_taken, min_sq_dist_counter, post_counter, m, s, burnIn_phaseI, burnIn_phaseII ,max_num_iterations, max_iters, n_genes
-    cdef double min_sq_dist, prev_sq_dist, current_sq_dist, max_post, current_post, prev_post, alpha,  sigma_n_init, sigma_n2_shape, sigma_n2_rate, length_scale_mu, length_scale_sigma, sigma_f_mu, sigma_f_sigma, sq_dist_eps, post_eps
-    cdef bool converged, converged_by_sq_dist, converged_by_likelihood, check_convergence, check_burnin_convergence, sparse_regression, fast
-    cdef gene_expression_matrix
-    cdef double[:] t
-    cdef optimizer, X, last_MVN_by_cluster_by_gene, last_cluster, clusters, S, log_likelihoods, cluster_size_changes, last_proportions, sampled_clusterings, all_clusterings
+    #cdef int iter_num, num_samples_taken, min_sq_dist_counter, post_counter, m, s, burnIn_phaseI, burnIn_phaseII ,max_num_iterations, max_iters, n_genes
+    #cdef double min_sq_dist, prev_sq_dist, current_sq_dist, max_post, current_post, prev_post, alpha,  sigma_n_init, sigma_n2_shape, sigma_n2_rate, length_scale_mu, length_scale_sigma, sigma_f_mu, sigma_f_sigma, sq_dist_eps, post_eps
+    #cdef bool converged, converged_by_sq_dist, converged_by_likelihood, check_convergence, check_burnin_convergence, sparse_regression, fast
+    #cdef gene_expression_matrix
+    #cdef double[:] t
+    #cdef optimizer, X, last_MVN_by_cluster_by_gene, last_cluster, clusters, S, log_likelihoods, cluster_size_changes, last_proportions, sampled_clusterings, all_clusterings
     
     def __init__(self,
                  gene_expression_matrix,
-                 double[:] t,
-                 int max_num_iterations=1000, 
-                 int max_iters=1000, 
+                 t,
+                 max_num_iterations=1000, 
+                 max_iters=1000, 
                  optimizer='lbfgsb', 
-                 int burnIn_phaseI=240, 
-                 int burnIn_phaseII=480, 
-                 double alpha=1., 
-                 int m=4, 
-                 int s=3, 
-                 bool check_convergence=False, 
-                 bool check_burnin_convergence=False, 
-                 bool sparse_regression=False, 
-                 bool fast=False, 
-                 double sigma_n_init=0.2, 
-                 double sigma_n2_shape=12., 
-                 double sigma_n2_rate=2., 
-                 double length_scale_mu=0., 
-                 double length_scale_sigma=1., 
-                 double sigma_f_mu=0., 
-                 double sigma_f_sigma=1., 
-                 double sq_dist_eps=0.01, 
-                 double post_eps=1e-5):
+                 burnIn_phaseI=240, 
+                 burnIn_phaseII=480, 
+                 alpha=1., 
+                 m=4, 
+                 s=3, 
+                 check_convergence=False, 
+                 check_burnin_convergence=False, 
+                 sparse_regression=False, 
+                 fast=False, 
+                 sigma_n_init=0.2, 
+                 sigma_n2_shape=12., 
+                 sigma_n2_rate=2., 
+                 length_scale_mu=0., 
+                 length_scale_sigma=1., 
+                 sigma_f_mu=0., 
+                 sigma_f_sigma=1., 
+                 sq_dist_eps=0.01, 
+                 post_eps=1e-5):
         
         # hard-coded vars:        
         self.iter_num = 0
@@ -536,10 +534,7 @@ cdef class gibbs_sampler(object):
     
     #############################################################################################
     
-    @cython.wraparound(False)
-    @cython.cdivision(True)
-    @cython.nonecheck(False)
-    def calculate_prior(self, int gene):
+    def calculate_prior(self, gene):
         '''
         Implementation of Neal's algorithm 8 (DOI:10.1080/10618600.2000.10474879), 
         according to the number of genes in each cluster, returns an array of prior 
@@ -556,9 +551,9 @@ cdef class gibbs_sampler(object):
         :rtype: numpy array of floats
         '''
         
-        cdef double[:] prior = np.zeros(len(self.clusters))
-        cdef int index
-        cdef int clusterID
+        prior = np.zeros(len(self.clusters))
+        index = None
+        clusterID = None
         
         # Check if the last cluster to which the gene belonged was a singleton.
         singleton = True if self.clusters[self.last_cluster[gene]].size == 1 else False
@@ -587,10 +582,7 @@ cdef class gibbs_sampler(object):
         prior_normed = prior / np.sum(prior)
         return prior_normed
         
-    @cython.wraparound(False)
-    @cython.cdivision(True)
-    @cython.nonecheck(False)
-    def calculate_likelihood_MVN_by_dict(self, int gene):
+    def calculate_likelihood_MVN_by_dict(self, gene):
         '''
         Compute likelihood of gene belonging to each cluster (sorted by cluster name) according
         to the multivariate normal distribution.
@@ -606,9 +598,9 @@ cdef class gibbs_sampler(object):
         :rtype: numpy array of floats
         '''
         
-        cdef double[:] lik = np.zeros(len(self.clusters))
-        cdef int index
-        cdef int clusterID
+        lik = np.zeros(len(self.clusters))
+        index = None
+        clusterID = None
         
         # Check if the last cluster to which the gene belonged was a singleton.
         singleton = True if self.clusters[self.last_cluster[gene]].size == 1 else False
@@ -752,7 +744,7 @@ cdef class gibbs_sampler(object):
 #         warnings.simplefilter("error")
         
         print('Initializing one-gene clusters...')
-        cdef int i, gene
+        i, gene = None, None
         for i in range(self.n_genes):
             self.clusters[self.m + i] = dp_cluster(members=[i], sigma_n=self.sigma_n_init, \
                                                    X=self.X, Y=np.array(np.mat(self.gene_expression_matrix[i,:])).T, \
@@ -830,8 +822,8 @@ cdef class gibbs_sampler(object):
                 
             if self.check_burnin_convergence and self.iter_num < self.burnIn_phaseII:
                 
-                sizes = {n:c.size for n,c in self.clusters.iteritems() if c.size > 0}
-                proportions = {n:s/float(sum(sizes.values())) for n,s in sizes.iteritems()}
+                sizes = {n:c.size for n,c in self.clusters.items() if c.size > 0}
+                proportions = {n:s/float(sum(sizes.values())) for n,s in sizes.items()}
                 
                 if self.last_proportions is not False:
                     
@@ -868,7 +860,7 @@ cdef class gibbs_sampler(object):
                 
                 if self.sample():
                     
-                    for clusterID, cluster in self.clusters.iteritems():
+                    for clusterID, cluster in self.clusters.items():
                         
                         if not cluster.model_optimized and cluster.size > 1:
                             del self.last_MVN_by_cluster_by_gene[clusterID]
