@@ -822,8 +822,8 @@ class gibbs_sampler(object):
                 
             if self.check_burnin_convergence and self.iter_num < self.burnIn_phaseII:
                 
-                sizes = {n:c.size for n,c in self.clusters.iteritems() if c.size > 0}
-                proportions = {n:s/float(sum(sizes.values())) for n,s in sizes.iteritems()}
+                sizes = {n:c.size for n,c in self.clusters.items() if c.size > 0}
+                proportions = {n:s/float(sum(sizes.values())) for n,s in sizes.items()}
                 
                 if self.last_proportions is not False:
                     
@@ -860,7 +860,7 @@ class gibbs_sampler(object):
                 
                 if self.sample():
                     
-                    for clusterID, cluster in self.clusters.iteritems():
+                    for clusterID, cluster in self.clusters.items():
                         
                         if not cluster.model_optimized and cluster.size > 1:
                             del self.last_MVN_by_cluster_by_gene[clusterID]
