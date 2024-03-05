@@ -1,7 +1,6 @@
 import cython
 import numpy as np
-cimport numpy as np
-np.import_array()
+import numpy as np
 from DP_GP import utils
 from scipy.cluster.hierarchy import fclusterdata
 
@@ -17,7 +16,7 @@ def log_factorial(n):
 
 #############################################################################################
 
-cdef compute_mpear(short[:] cluster_labels, double[:,:] sim_mat):
+def compute_mpear(cluster_labels, sim_mat):
     '''
     Compute MPEAR (Fritsch and Ickstadt 2009, DOI:10.1214/09-BA414).
     This function and accessory routines were taken with little 
@@ -31,13 +30,12 @@ cdef compute_mpear(short[:] cluster_labels, double[:,:] sim_mat):
     :rtype: float
     
     '''
-    cdef int N = sim_mat.shape[0]
-    cdef double c = np.exp(log_binomial_coefficient(N, 2))
-    cdef double num_term_1 = 0
-    cdef double num_term_2 = 0
-    cdef double den_term_1 = 0
+    N = sim_mat.shape[0]
+    c = np.exp(log_binomial_coefficient(N, 2))
+    num_term_1 = 0
+    num_term_2 = 0
+    den_term_1 = 0
     
-    cdef size_t i, j
     for j in range(N):
         for i in range(j):
             den_term_1 += sim_mat[i][j]
