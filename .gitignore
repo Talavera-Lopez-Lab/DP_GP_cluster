@@ -2,3 +2,5 @@ build/
 *.pyc
 *.c
 .DS_Store 
+.eggs
+DP_GP_cluster.egg-info
